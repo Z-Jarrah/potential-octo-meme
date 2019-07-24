@@ -13,7 +13,11 @@
 <svg width=300 height=300></svg>
 
 <script>
-console.log('Stuff happens here!')
+  var selection = d3.select('svg').append('circle')
+  .attr('r' = 30)
+  .attr('x', 50)
+  .attr('y', 50)
+  .attr('style', 'fill:blue')
 </script>
 
 </body>
