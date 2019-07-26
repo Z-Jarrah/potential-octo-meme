@@ -24,7 +24,7 @@
   d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
     
     for (i = 0; i < data.length; i++){
-      console.log(data[i][0])
+      console.log(data[i]['title'])
     }
     ;})
 </script>
