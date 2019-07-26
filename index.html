@@ -27,8 +27,10 @@
     
     var list_size = 100
     var text = ''
+    var array = []
     for (i = 0; i < list_size; i++){
-      text += data[i]['bookID'] + ': ' + data[i]['title'] + '| ' + data[i]['authors'] + '<br>'
+      text = data[i]['bookID'] + ': ' + data[i]['title'] + '| ' + data[i]['authors']
+      array.push(text)
     }
     document.getElementById('demo').innerHTML = text
     ;})
