@@ -28,7 +28,7 @@
     var list_size = 100
     var text = ''
     for (i = 0; i < list_size; i++){
-      text = data[i]['title'] + '<br>'
+      text += data[i]['title'] + '<br>'
     }
     document.getElementById('demo').innerHTML = text
     ;})
