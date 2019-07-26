@@ -32,7 +32,13 @@
       text = data[i]['bookID'] + ': ' + data[i]['title'] + '| ' + data[i]['authors']
       array.push(text)
     }
-    document.getElementById('demo').innerHTML = text
+    
+    var array_text = ''
+    
+    for (i = 0; i < array.length; i++){
+      array_text += array[i] + '<br>'
+    }
+    document.getElementById('demo').innerHTML = array_text
     ;})
 </script>
 
