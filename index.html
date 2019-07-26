@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" Access-Control-Allow-Origin: * >
 <head>
   <h1>Data Visualization</h1>
   <meta charset="utf-8">
@@ -13,7 +13,7 @@
 
 <svg width=300 height=300></svg>
 
-<script Access-Control-Allow-Origin: * >
+<script>
   
   var selection = d3.select('svg').append('circle')
   .attr('r', 30)
@@ -21,7 +21,7 @@
   .attr('cy', 50)
   .attr('style', 'fill:blue')
   
-  d3.csv("https://flunky.github.io/cars2017.csv").then(function(data){
+  d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
     console.log(data[0])
     ;})
 </script>
