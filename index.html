@@ -29,7 +29,8 @@
     var text = ''
     var array = []
     for (i = 0; i < list_size; i++){
-      text = data[i]['bookID'] + ': ' + data[i]['title'] + '| ' + data[i]['authors']
+      if(data[i]['authors'].includes('J.R.R. Tolkien'))
+      text = data[i]['title'] + '| ' + data[i]['authors']
       array.push(text)
     }
     
