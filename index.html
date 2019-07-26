@@ -22,7 +22,10 @@
   .attr('style', 'fill:blue')
   
   d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
-    console.log(data[0])
+    
+    for (i = 0; i < data.length; i++){
+      console.log(data[i])
+    }
     ;})
 </script>
 
