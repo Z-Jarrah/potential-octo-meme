@@ -12,10 +12,9 @@
 
 <body>
 <h2> Lord of the Rings vs Harry Potter </h2>
-<svg width=300 height=300></svg>
 <p id='tolk'></p>
 <p id='rowl'></p>
-
+<svg width=300 height=300></svg>
 <script>
   
   var selection = d3.select('svg').append('circle')
@@ -44,14 +43,14 @@
     var tolkien_text = ''
     var rowling_text = ''
     for (i = 0; i < tolkien_array.length; i++){
-      array_text += tolkien_array[i]['title'] + '| Rating: ' + tolkien_array[i]['average_rating'] + '<br>'
+      tolkien_text += tolkien_array[i]['title'] + '| Rating: ' + tolkien_array[i]['average_rating'] + '<br>'
     }
-    document.getElementById('tolk').innerHTML = array_text
+    document.getElementById('tolk').innerHTML = tolkien_text
     
     for (i = 0; i < rowling_array.length; i++){
-      array_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '<br>'
+      rowling_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '<br>'
     }
-    document.getElementById('rowl').innerHTML = array_text
+    document.getElementById('rowl').innerHTML = rowling_text
     ;})
 </script>
 
