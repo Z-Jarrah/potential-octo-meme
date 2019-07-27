@@ -13,7 +13,8 @@
 <body>
 <h2> Lord of the Rings vs Harry Potter </h2>
 <svg width=300 height=300></svg>
-<p id='demo'></p>
+<p id='tolk'></p>
+<p id='rowl'></p>
 
 <script>
   
@@ -27,20 +28,30 @@
     
     var list_size = 100
     var text = ''
-    var array = []
+    var tolkien_array = []
+    var rowling_array = []
     for (i = 0; i < list_size; i++){
       if(data[i]['authors'].includes('J.R.R. Tolkien')){
-      text = data[i]['title'] + ' | ' + data[i]['authors']
-      array.push(text)
+        text = data[i]
+        tolkien_array.push(text)
+      }
+      else if(data[i]['authors'].includes('J.K. Rowling')){
+        text = data[i]
+        rowling_array.push(text)
       }
     }
     
-    var array_text = ''
-    
-    for (i = 0; i < array.length; i++){
-      array_text += array[i] + '<br>'
+    var tolkien_text = ''
+    var rowling_text = ''
+    for (i = 0; i < tolkien_array.length; i++){
+      array_text += tolkien_array[i]['title'] + '| Rating: ' + tolkien_array[i]['average_rating'] + '<br>'
     }
-    document.getElementById('demo').innerHTML = array_text
+    document.getElementById('tolk').innerHTML = array_text
+    
+    for (i = 0; i < rowling_array.length; i++){
+      array_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '<br>'
+    }
+    document.getElementById('rowl').innerHTML = array_text
     ;})
 </script>
 
