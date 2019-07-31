@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" Access-Control-Allow-Origin: * >
+<html lang="en" id="home">
 <head>
   <h1>Data Visualization</h1>
   <meta charset="utf-8">
@@ -8,27 +8,34 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- Load d3-annotation -->
+  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 </head>
 
 <body>
-<h2> Lord of the Rings vs Harry Potter </h2>
+<h2> Lord of the Rings & Harry Potter </h2>
 <p id='tolk'></p>
 <p id='rowl'></p>
-<svg width=300 height=300></svg>
+<svg id='#id1' width=500 height=500></svg>
 <script>
   
-  var selection = d3.select('svg').append('circle')
-  .attr('r', 30)
-  .attr('cx', 50)
-  .attr('cy', 50)
-  .attr('style', 'fill:blue')
+var width = 500,
+            height = 500,
+            padding = 50;
+
+
+  
+  var yScale = d3.scaleLinear().domain([0, 5]).range([height - padding, padding]);
+  
+  var xScale = d3.scaleOrdinal().domain([0,13]).range([0, width])
+  
+  var tolkien_array = []
+  var rowling_array = []
   
   d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
     
     var list_size = 100
     var text = ''
-    var tolkien_array = []
-    var rowling_array = []
     for (i = 0; i < list_size; i++){
       if(data[i]['authors'].includes('J.R.R. Tolkien')){
         text = data[i]
@@ -43,15 +50,67 @@
     var tolkien_text = ''
     var rowling_text = ''
     for (i = 0; i < tolkien_array.length; i++){
-      tolkien_text += tolkien_array[i]['title'] + '| Rating: ' + tolkien_array[i]['average_rating'] + '<br>'
+      tolkien_text += tolkien_array[i]['title'] + '| Rating: ' + tolkien_array[i]['average_rating'] + '| # of Ratings: ' + tolkien_array[i]['ratings_count'] + '<br>'
     }
     document.getElementById('tolk').innerHTML = tolkien_text
     
     for (i = 0; i < rowling_array.length; i++){
-      rowling_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '<br>'
+      rowling_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '| # of Ratings: ' + rowling_array[i]['ratings_count'] + '<br>'
     }
     document.getElementById('rowl').innerHTML = rowling_text
+    
+    
+    console.log('Test')
+    console.log(tolkien_array.length)
+    for(i=0;i<tolkien_array.length;i++){
+      console.log(tolkien_array[i])  
+    }
+    
+  var selection = d3.select('svg').selectAll('circle').data(tolkien_array).enter().append('circle')
+  .attr('r', 10)
+    .attr('cx', function(d,i){return 10*(i+1);})
+  .attr('cy', function(d,i){return tolkien_array[i]['average_rating'];})
+  .attr('style', 'fill:blue')
+  
+  
+  //   console.log(rowling_array.length)
+  //   for(i=0;i<rowling_array.length;i++){
+  //     console.log(rowling_array[i])
+  //   }
+  //
+  // var selection = d3.select('#id1').selectAll('rect').data(rowling_array).enter().append('rect')
+  //   .attr('x', function(d,i){return 10*(i+1)})
+  //   .attr('y',200)
+  //   .attr('height', 10)
+  //   .attr('width', 4)
+  // .attr('style', 'fill:blue')
+  
     ;})
+  
+    
+
+    
+    
+    
+    const annotations = [
+      {
+        note: {
+          label: "Both titles are held in high regard [Ratings from Goodreads]",
+          title: 'Exploring Literary Works'
+        },
+        x: 100,
+        y: 100,
+        dy: 50,
+        dx: 50
+      }
+    ]
+
+    // Add annotation to the chart
+    const makeAnnotations = d3.annotation()
+      .annotations(annotations)
+    d3.select('svg')
+      .append('g')
+      .call(makeAnnotations)
 </script>
 
 </body>
