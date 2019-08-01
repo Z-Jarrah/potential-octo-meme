@@ -12,36 +12,60 @@
   <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 </head>
 
+<style> /* set the CSS */
+
+body { font: 12px Arial;}
+
+path { 
+    stroke: blue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 60px;					
+    height: 28px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: blue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+</style>
+
 <body>
 <h2> Lord of the Rings & Harry Potter </h2>
 <p id='tolk'></p>
 <p id='rowl'></p>
-<svg id='#id1' width=500 height=500></svg>
+
+<!--SVG Canvas HERE>-->
+
 <script>
-  
-var width = 500,
-            height = 500,
-            padding = 50;
-
-
-  
-  var yScale = d3.scaleLinear().domain([0, 5]).range([height - padding, padding]);
-  
-  var xScale = d3.scaleOrdinal().domain([0,13]).range([0, width])
-  
-  var tolkien_array = []
-  var rowling_array = []
+      
+var tolkien_array = []
+var rowling_array = []
   
   d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
     
-    var list_size = 100
     var text = ''
-    for (i = 0; i < list_size; i++){
-      if(data[i]['authors'].includes('J.R.R. Tolkien')){
+    for (i = 0; i < data.length; i++){
+      if(data[i]['authors'].includes('J.R.R. Tolkien') && data[i]['language_code'].includes('eng')){
         text = data[i]
         tolkien_array.push(text)
       }
-      else if(data[i]['authors'].includes('J.K. Rowling')){
+      else if(data[i]['authors'].includes('J.K. Rowling') && data[i]['language_code'].includes('eng')){
         text = data[i]
         rowling_array.push(text)
       }
@@ -60,48 +84,86 @@ var width = 500,
     document.getElementById('rowl').innerHTML = rowling_text
     
     
-    console.log('Test')
-    console.log(tolkien_array.length)
-    for(i=0;i<tolkien_array.length;i++){
-      console.log(tolkien_array[i])  
-    }
-    
-  var selection = d3.select('svg').selectAll('circle').data(tolkien_array).enter().append('circle')
-  .attr('r', 10)
-    .attr('cx', function(d,i){return 10*(i+1);})
-  .attr('cy', function(d,i){return tolkien_array[i]['average_rating'];})
-  .attr('style', 'fill:blue')
-  
-  
-  //   console.log(rowling_array.length)
-  //   for(i=0;i<rowling_array.length;i++){
-  //     console.log(rowling_array[i])
+  //   console.log('Test')
+  //   console.log(tolkien_array.length)
+  //   for(i=0;i<tolkien_array.length;i++){
+  //     console.log(tolkien_array[i])
   //   }
   //
-  // var selection = d3.select('#id1').selectAll('rect').data(rowling_array).enter().append('rect')
-  //   .attr('x', function(d,i){return 10*(i+1)})
-  //   .attr('y',200)
-  //   .attr('height', 10)
-  //   .attr('width', 4)
+  // var selection = d3.select('svg').selectAll('circle').data(tolkien_array).enter().append('circle')
+  // .attr('r', 2)
+  //   .attr('cx', function(d,i){return 10*(i+1);})
+  // .attr('cy', function(d,i){return tolkien_array[i]['average_rating'];})
   // .attr('style', 'fill:blue')
+  
+  
+    console.log(rowling_array.length)
+    for(i=0;i<rowling_array.length;i++){
+      console.log(rowling_array[i])
+    }
+  
+  
+    x.domain(d3.extent(data, function(d) { return d; }));
+    y.domain([0, d3.max(data, function(d) { return d; })]);
+    
+    
+  var selection = d3.select('svg').selectAll('circle').data(rowling_array).enter().append('circle')
+  .attr('r',5)
+    .attr('cx', function(d,i){ return rowling_array[i]['average_rating'] * y.bandwidth()})
+  .attr('cy', function(d,i){return 35 + 12*(i+1)})
+  .attr('style', 'fill:blue')
   
     ;})
   
-    
+        
+// Set the dimensions of the canvas / graph
+var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 270 - margin.top - margin.bottom;
 
+
+  
+// Set the ranges
+var x = d3.scaleLinear().domain([0,5]).range([0, width]);
+var y = d3.scaleBand().domain([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]).range([height, 0]);
+    
+// Define the axes
+var xAxis = d3.axisBottom(x).ticks(10);
+
+var yAxis = d3.axisLeft(y).ticks(16);
+
+// Adds the svg canvas
+var svg = d3.select("body")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+              
+      // Add the X Axis
+      svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+      // Add the Y Axis
+      svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
     
     
     
     const annotations = [
       {
         note: {
-          label: "Both titles are held in high regard [Ratings from Goodreads]",
+          label: "The works of J.K. Rowling held in high regard.[Ratings from Goodreads]",
           title: 'Exploring Literary Works'
         },
-        x: 100,
+        x: 450,
         y: 100,
-        dy: 50,
-        dx: 50
+        dy: 20,
+        dx: 20
       }
     ]
 
