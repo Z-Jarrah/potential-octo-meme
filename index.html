@@ -18,7 +18,7 @@
 body { font: 12px Arial;}
 
 path { 
-    stroke: blue;
+    stroke: gray;
     stroke-width: 2;
     fill: none;
 }
@@ -50,6 +50,13 @@ div.tooltip {
 <h3> Examining the Works of Three Great Fantasy Writers </h3>
 
 <div id="option1">
+    <input name="Tolkien" 
+           type="button" 
+           value="J.R.R. Tolkien" 
+           onclick="TolkienData()" />
+</div>
+
+<div id="option1">
     <input name="Rowling"
            translate=transform(200,200)
            type="button" 
@@ -58,19 +65,13 @@ div.tooltip {
 </div>
 
 <div id="option1">
-    <input name="Tolkien" 
-           type="button" 
-           value="J.R.R. Tolkien" 
-           onclick="TolkienData()" />
-</div>
-
-<div id="option1">
     <input name="Martin" 
            type="button" 
            value="George R.R. Martin" 
            onclick="MartinData()" />
 </div>
-
+<br>
+<br>
 <p id='books'></p>
 <!--SVG Canvas HERE>-->
 <svg></svg>
@@ -80,6 +81,100 @@ div.tooltip {
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 600 - margin.left - margin.right,
     height = 270 - margin.top - margin.bottom;
+
+    function TolkienData(){
+    d3.select('svg').remove()
+    // Adds the svg canvas
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", 
+            "translate(" + margin.left + "," + margin.top + ")");
+          
+    // Loading Goodreads Data
+    var array = []
+
+    d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/tolkien.csv").then(function(data){
+
+      for (i = 0; i < data.length; i++){
+        text = data[i]
+        array.push(text)
+      }
+      var text = ''
+
+      for (i = 0; i < array.length; i++){
+        text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+      }
+      document.getElementById('books').innerHTML = text
+
+      console.log(array.length)
+    
+      var ratings = []
+      for (i=0;i<data.length;i++){
+        ratings.push(data[i]['average_rating'])
+      }
+    
+  //scale function
+  var xScale = d3.scaleLinear()
+      .domain([0, data.length])
+      .range([0, width]);
+    
+  var yScale = d3.scaleLinear()
+  		.domain([5,0])
+  		//.range([padding, w-padding * 2]);
+  		.range([margin.bottom, height]);
+
+  	var xAxis = d3.axisBottom().scale(xScale).ticks(data.length);
+
+  	var yAxis = d3.axisLeft().scale(yScale).ticks(10);
+    
+      // Add data points
+  	  svg.selectAll("circle")
+  		  .data(data)
+  		  .enter()
+  		  .append("circle")
+      .attr("cx", function(d,i) { return xScale(1 + i);})
+  		.attr("cy", function(d,i) { return yScale(ratings[i]);})
+  		.attr("r", 5)
+  		.attr("fill", "green");
+    
+      
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+      ;})
+
+      const annotations = [
+        {
+          note: {
+            label: "The works of J.R.R Tolkien [Ratings from Goodreads]",
+            title: 'Exploring Literary Works'
+          },
+          x: 450,
+          y: 100,
+          dy: 20,
+          dx: 20
+        }
+      ]
+
+      // Add annotation to the chart
+      const makeAnnotations = d3.annotation()
+            .annotations(annotations)
+            d3.select('svg')
+            .append('g')
+            .call(makeAnnotations)
+  
+    }// End of TolkienData Function
     
     function RowlingData(){
       d3.select('svg').remove()
@@ -109,7 +204,47 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
         document.getElementById('books').innerHTML = text
     
         console.log(array.length)
-    
+        
+        var ratings = []
+        for (i=0;i<data.length;i++){
+          ratings.push(data[i]['average_rating'])
+        }
+        
+    //scale function
+    var xScale = d3.scaleLinear()
+        .domain([0, data.length])
+        .range([0, width]);
+        
+    var yScale = d3.scaleLinear()
+  			.domain([5,0])
+  			//.range([padding, w-padding * 2]);
+  			.range([margin.bottom, height]);
+
+  		var xAxis = d3.axisBottom().scale(xScale).ticks(data.length);
+
+  		var yAxis = d3.axisLeft().scale(yScale).ticks(10);
+        
+        // Add data points
+  		  svg.selectAll("circle")
+  			  .data(data)
+  			  .enter()
+  			  .append("circle")
+        .attr("cx", function(d,i) { return xScale(1 + i);})
+  			.attr("cy", function(d,i) { return yScale(ratings[i]);})
+  			.attr("r", 5)
+  			.attr("fill", "blue");
+        
+          
+      // Add the X Axis
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+      // Add the Y Axis
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis);
     ;})
     
       const annotations = [
@@ -134,24 +269,22 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
           
     }// End of RowlingData Function
 
-    
-    
-        
-  function TolkienData(){
-    d3.select('svg').remove()
-    // Adds the svg canvas
-    var svg = d3.select("body")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", 
-                  "translate(" + margin.left + "," + margin.top + ")");
+  
+  function MartinData(){
+  d3.select('svg').remove()
+  // Adds the svg canvas
+  var svg = d3.select("body")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
           
-    // Loading Goodreads Data
-    var array = []
+  // Loading Goodreads Data
+  var array = []
 
-    d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/tolkien.csv").then(function(data){
+  d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/martin.csv").then(function(data){
 
     for (i = 0; i < data.length; i++){
       text = data[i]
@@ -165,60 +298,47 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
     document.getElementById('books').innerHTML = text
 
     console.log(array.length)
+    
+    var ratings = []
+    for (i=0;i<data.length;i++){
+      ratings.push(data[i]['average_rating'])
+    }
+    
+//scale function
+var xScale = d3.scaleLinear()
+    .domain([0, data.length])
+    .range([0, width]);
+    
+var yScale = d3.scaleLinear()
+		.domain([5,0])
+		//.range([padding, w-padding * 2]);
+		.range([margin.bottom, height]);
 
-    ;})
+	var xAxis = d3.axisBottom().scale(xScale).ticks(data.length);
 
-    const annotations = [
-      {
-        note: {
-          label: "The works of J.R.R Tolkien [Ratings from Goodreads]",
-          title: 'Exploring Literary Works'
-        },
-        x: 450,
-        y: 100,
-        dy: 20,
-        dx: 20
-      }
-    ]
-
-    // Add annotation to the chart
-    const makeAnnotations = d3.annotation()
-          .annotations(annotations)
-          d3.select('svg')
-          .append('g')
-          .call(makeAnnotations)
-  
-  }// End of TolkienData Function
-  
-  function MartinData(){
-    d3.select('svg').remove()
-    d3.select('svg').remove()
-    // Adds the svg canvas
-    var svg = d3.select("body")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
+	var yAxis = d3.axisLeft().scale(yScale).ticks(10);
+    
+    // Add data points
+	  svg.selectAll("circle")
+		  .data(data)
+		  .enter()
+		  .append("circle")
+    .attr("cx", function(d,i) { return xScale(1 + i);})
+		.attr("cy", function(d,i) { return yScale(ratings[i]);})
+		.attr("r", 5)
+		.attr("fill", "red");
+    
       
-    // Loading Goodreads Data
-    var array = []
+  // Add the X Axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
 
-    d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/martin.csv").then(function(data){
-      
-      for (i = 0; i < data.length; i++){
-        text = data[i]
-        array.push(text)
-      }
-      var text = ''
-
-      for (i = 0; i < array.length; i++){
-        text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
-      }
-      document.getElementById('books').innerHTML = text
-
-      console.log(array.length)
+  // Add the Y Axis
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
 
       ;})
 
