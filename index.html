@@ -47,76 +47,185 @@ div.tooltip {
 </style>
 
 <body>
-<h3> Drill Down Structure for books from Goodreads </h3>
-<p id='rowl'></p>
+<h3> Examining the Works of Three Great Fantasy Writers </h3>
 
 <div id="option1">
-    <input name="Show Tolkien Data" 
+    <input name="Rowling"
+           translate=transform(200,200)
            type="button" 
-           value="Tolkien Data" 
+           value="J.K. Rowling" 
+           onclick="RowlingData()" />
+</div>
+
+<div id="option1">
+    <input name="Tolkien" 
+           type="button" 
+           value="J.R.R. Tolkien" 
            onclick="TolkienData()" />
 </div>
 
+<div id="option1">
+    <input name="Martin" 
+           type="button" 
+           value="George R.R. Martin" 
+           onclick="MartinData()" />
+</div>
+
+<p id='books'></p>
 <!--SVG Canvas HERE>-->
+<svg></svg>
 
 <script>
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 600 - margin.left - margin.right,
     height = 270 - margin.top - margin.bottom;
-          
-// Set the ranges
-var x = d3.scaleBand().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
-
-// Define the axes
-var xAxis = d3.axisBottom();
-
-var yAxis = d3.axisLeft();
-
-// Define the div for the tooltip
-var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
-    .style("opacity", 0);
-
-// Adds the svg canvas
-var svg = d3.select("body")
-    .append("svg")
+    
+    function RowlingData(){
+      d3.select('svg').remove()
+      // Adds the svg canvas
+      var svg = d3.select("body")
+        .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-    .append("g")
+        .append("g")
         .attr("transform", 
               "translate(" + margin.left + "," + margin.top + ")");
               
-// Loading Goodreads Data
-var tolkien_array = []
-var rowling_array = []
+      // Loading Goodreads Data
+      var array = []
 
-  d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/books.csv").then(function(data){
+      d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/rowling.csv").then(function(data){
     
-    var text = ''
-    for (i = 0; i < data.length; i++){
-      if (data[i]['authors'].includes('J.K. Rowling') && data[i]['language_code'].includes('eng')){
-        text = data[i]
-        rowling_array.push(text)
-      }
-    }
-    var rowling_text = ''
+        for (i = 0; i < data.length; i++){
+          text = data[i]
+          array.push(text)
+        }
+        var text = ''
     
-    for (i = 0; i < rowling_array.length; i++){
-      rowling_text += rowling_array[i]['title'] + '| Rating: ' + rowling_array[i]['average_rating'] + '| # of Ratings: ' + rowling_array[i]['ratings_count'] + '<br>'
-    }
-    document.getElementById('rowl').innerHTML = rowling_text
+        for (i = 0; i < array.length; i++){
+          text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+        }
+        document.getElementById('books').innerHTML = text
     
-  console.log(rowling_array.length)
-    
+        console.log(array.length)
     
     ;})
     
+      const annotations = [
+        {
+          note: {
+            label: "The works of J.K. Rowling [Ratings from Goodreads]",
+            title: 'Exploring Literary Works'
+          },
+          x: 450,
+          y: 100,
+          dy: 20,
+          dx: 20
+        }
+      ]
+
+      // Add annotation to the chart
+      const makeAnnotations = d3.annotation()
+        .annotations(annotations)
+        d3.select('svg')
+        .append('g')
+        .call(makeAnnotations)
+          
+    }// End of RowlingData Function
+
+    
+    
+        
+  function TolkienData(){
+    d3.select('svg').remove()
+    // Adds the svg canvas
+    var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", 
+                  "translate(" + margin.left + "," + margin.top + ")");
+          
+    // Loading Goodreads Data
+    var array = []
+
+    d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/tolkien.csv").then(function(data){
+
+    for (i = 0; i < data.length; i++){
+      text = data[i]
+      array.push(text)
+    }
+    var text = ''
+
+    for (i = 0; i < array.length; i++){
+      text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+    }
+    document.getElementById('books').innerHTML = text
+
+    console.log(array.length)
+
+    ;})
+
     const annotations = [
       {
         note: {
-          label: "The works of J.K. Rowling held in high regard.[Ratings from Goodreads]",
+          label: "The works of J.R.R Tolkien [Ratings from Goodreads]",
+          title: 'Exploring Literary Works'
+        },
+        x: 450,
+        y: 100,
+        dy: 20,
+        dx: 20
+      }
+    ]
+
+    // Add annotation to the chart
+    const makeAnnotations = d3.annotation()
+          .annotations(annotations)
+          d3.select('svg')
+          .append('g')
+          .call(makeAnnotations)
+  
+  }// End of TolkienData Function
+  
+  function MartinData(){
+    d3.select('svg').remove()
+    d3.select('svg').remove()
+    // Adds the svg canvas
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+      
+    // Loading Goodreads Data
+    var array = []
+
+    d3.csv("https://raw.githubusercontent.com/Z-Jarrah/potential-octo-meme/master/martin.csv").then(function(data){
+      
+      for (i = 0; i < data.length; i++){
+        text = data[i]
+        array.push(text)
+      }
+      var text = ''
+
+      for (i = 0; i < array.length; i++){
+        text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+      }
+      document.getElementById('books').innerHTML = text
+
+      console.log(array.length)
+
+      ;})
+
+      const annotations = [
+      {
+        note: {
+          label: "The works of George R.R Martin [Ratings from Goodreads]",
           title: 'Exploring Literary Works'
         },
         x: 450,
@@ -129,15 +238,12 @@ var rowling_array = []
     // Add annotation to the chart
     const makeAnnotations = d3.annotation()
       .annotations(annotations)
-    d3.select('svg')
+      d3.select('svg')
       .append('g')
       .call(makeAnnotations)
     
-        
-        function TolkienData(){
-          d3.select('svg').remove()
-        }
-  
+    
+  }// End of MartinData Function
     
 </script>
 
