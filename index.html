@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" id="home">
+
 <head>
-  <h1> CS 498 Narrative Visualization Project</h1>
+  <h1>CS 498 Narrative Visualization Project</h1>
   <h2>Zeed Jarrah </h2>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,8 +35,8 @@ path {
 div.tooltip {	
     position: absolute;			
     text-align: center;			
-    width: 60px;					
-    height: 28px;					
+    width: 120px;					
+    height: 60px;					
     padding: 2px;				
     font: 12px sans-serif;		
     background: gray;	
@@ -47,7 +48,7 @@ div.tooltip {
 </style>
 
 <body>
-<h3> Examining the Works of Three Great Fantasy Writers </h3>
+<h3> Examining the Works of Great Fantasy Writers </h3>
 
 <div id="option1">
     <input name="Tolkien" 
@@ -72,9 +73,10 @@ div.tooltip {
 </div>
 <br>
 <br>
-<p id='books'></p>
 <!--SVG Canvas HERE>-->
 <svg></svg>
+
+<p id='books'></p>
 
 <script>
 // Set the dimensions of the canvas / graph
@@ -82,6 +84,11 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 600 - margin.left - margin.right,
     height = 270 - margin.top - margin.bottom;
 
+// Define the div for the tooltip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+    
     function TolkienData(){
     d3.select('svg').remove()
     // Adds the svg canvas
@@ -102,19 +109,15 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
         text = data[i]
         array.push(text)
       }
-      var text = ''
+      var item = ''
+      var annotations = []
 
       for (i = 0; i < array.length; i++){
-        text += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+        item += array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'] + '<br>'
+        annotations.push(array[i]['title'] + '| Rating: ' + array[i]['average_rating'] + '| # of Ratings: ' + array[i]['ratings_count'])
       }
-      document.getElementById('books').innerHTML = text
+      document.getElementById('books').innerHTML = item
 
-      console.log(array.length)
-    
-      var ratings = []
-      for (i=0;i<data.length;i++){
-        ratings.push(data[i]['average_rating'])
-      }
     
   //scale function
   var xScale = d3.scaleLinear()
@@ -123,7 +126,6 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
     
   var yScale = d3.scaleLinear()
   		.domain([5,0])
-  		//.range([padding, w-padding * 2]);
   		.range([margin.bottom, height]);
 
   	var xAxis = d3.axisBottom().scale(xScale).ticks(data.length);
@@ -136,10 +138,24 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
   		  .enter()
   		  .append("circle")
       .attr("cx", function(d,i) { return xScale(1 + i);})
-  		.attr("cy", function(d,i) { return yScale(ratings[i]);})
-  		.attr("r", 5)
-  		.attr("fill", "green");
-    
+    .attr("cy", function(d,i) { return yScale(data[i]['average_rating']);})
+  		.attr("r", 5)                                                            
+  		.attr("fill", "green")
+    .on("mouseover", function(d) {
+      d3.select(this).style("fill", "lawngreen");
+      div.transition()
+          .duration(200)		
+          .style("opacity", .9);
+          div	.html(data)	
+              .style("left", (d3.event.pageX + 5) + "px")		
+              .style("top", (d3.event.pageY - 15) + "px")
+    })                  
+  .on("mouseout", function(d) {
+    d3.select(this).style("fill", "green");
+    div.transition()		
+       .duration(500)		
+       .style("opacity", 0)
+  });
       
     // Add the X Axis
     svg.append("g")
@@ -231,8 +247,23 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
   			  .append("circle")
         .attr("cx", function(d,i) { return xScale(1 + i);})
   			.attr("cy", function(d,i) { return yScale(ratings[i]);})
-  			.attr("r", 5)
-  			.attr("fill", "blue");
+  			.attr("r", 5)                                                            
+  			.attr("fill", "blue")
+      .on("mouseover", function(d) {
+        d3.select(this).style("fill", "cornflowerblue ");
+        div.transition()
+            .duration(200)		
+            .style("opacity", .9);
+            div	.html( function(d,i){return data[i];})	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px")
+      })                  
+    .on("mouseout", function(d) {
+      d3.select(this).style("fill", "blue");
+      div.transition()		
+         .duration(500)		
+         .style("opacity", 0)
+    });
         
           
       // Add the X Axis
@@ -325,8 +356,23 @@ var yScale = d3.scaleLinear()
 		  .append("circle")
     .attr("cx", function(d,i) { return xScale(1 + i);})
 		.attr("cy", function(d,i) { return yScale(ratings[i]);})
-		.attr("r", 5)
-		.attr("fill", "red");
+		.attr("r", 5)                                                            
+		.attr("fill", "red")
+  .on("mouseover", function(d) {
+    d3.select(this).style("fill", "lightcoral");
+    div.transition()
+        .duration(200)		
+        .style("opacity", .9);
+        div	.html( function(d,i){return data[i];})	
+            .style("left", (d3.event.pageX) + "px")		
+            .style("top", (d3.event.pageY) + "px")
+  })                  
+.on("mouseout", function(d) {
+  d3.select(this).style("fill", "red");
+  div.transition()		
+     .duration(500)		
+     .style("opacity", 0)
+});
     
       
   // Add the X Axis
