@@ -51,7 +51,7 @@ div.tooltip {
 <body>
 <h2> Examining the Works of Great Fantasy Writers </h2>
 <p> Visualizing the ratings of books from three prominent fantasy writers.<br>
-    Navigate the slides controlling the graph using the buttons below.</p>
+    Select an author below to view the author's included list of books and a scatterplot of their book's ratings.</p>
 
 <div id="option1">
     <input name="Tolkien" 
@@ -176,13 +176,13 @@ var div = d3.select("body").append("div")
       const annotations = [
         {
           note: {
-            label: "The works of J.R.R. Tolkien are a prerequiste for any lover of fantasy books. [Data from Goodreads]",
+            label: "The Hobbit and The Lord of the Rings series are Tolkien's greatest entries but his other works are not as highly rated by readers. [Data from Goodreads]",
             title: 'Lord of the Rings'
           },
-          x: 450,
-          y: 100,
-          dy: 20,
-          dx: 20
+          x: 300,
+          y: 90,
+          dy: 0,
+          dx: 0
         }
       ]
 
@@ -277,13 +277,13 @@ var yScale = d3.scaleLinear()
     const annotations = [
       {
         note: {
-          label: "The works of J.R.R. Tolkien are a prerequiste for any lover of fantasy books. [Data from Goodreads]",
+          label: "J.K. Rowling's two most recent entries seem to break off from the long established trend of success within the Harry Potter Franchise. [Data from Goodreads]",
           title: 'Harry Potter'
         },
-        x: 450,
-        y: 100,
-        dy: 20,
-        dx: 20
+        x: 300,
+        y: 90,
+        dy: 0,
+        dx: 0
       }
     ]
 
@@ -379,13 +379,13 @@ var yScale = d3.scaleLinear()
     const annotations = [
       {
         note: {
-          label: "The works of J.R.R. Tolkien are a prerequiste for any lover of fantasy books. [Data from Goodreads]",
+          label: "While the HBO series may be over, it is still too early to determine whether George R.R. Martin's A Song of Ice and Fire will continue to find success. [Data from Goodreads]",
           title: 'Game of Thrones'
         },
-        x: 450,
-        y: 100,
-        dy: 20,
-        dx: 20
+        x: 300,
+        y: 90,
+        dy: 0,
+        dx: 0
       }
     ]
 
